@@ -1,0 +1,42 @@
+name: Auto Update Fortnite Shop RSS
+
+# Run on a schedule and manually
+on:
+  schedule:
+    - cron: '0 3 * * *'   # Runs every day at 03:00 UTC (adjust if needed)
+  workflow_dispatch:     # Lets you trigger manually too
+
+jobs:
+  update_rss:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Get the code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      # Install your Node dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Run your script (replace with your actual script file name)
+      - name: Run update script
+        run: node updateFeed.js
+
+      # Commit and push the updated XML file
+      - name: Commit & push updated feed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fortnite_shop.xml
+          # Only commit if it changed
+          git diff --cached --quiet || git commit -m "Auto-update Fortnite RSS"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
