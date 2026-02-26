@@ -20,14 +20,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      
-      # Install your Node dependencies
-      - name: Install dependencies
-        run: npm install
 
       # Run your script (replace with your actual script file name)
       - name: Run update script
-        run: node updateFeed.js
+        run: node fortnite_shop_rss.js
 
       # Commit and push the updated XML file
       - name: Commit & push updated feed
